@@ -2,6 +2,22 @@
 
 CYBERTOP Premium is a cybersecurity crisis simulation for executive teams and boards. A facilitator runs a scenario while a separate projector dashboard displays the evolving crisis, decisions, and metrics. The interface and detailed simulation documentation are primarily in Spanish.
 
+Learn more at [cyber-es.com](https://www.cyber-es.com/).
+
+## Screenshots
+
+**Session setup**
+
+![CYBERTOP session setup screen](docs/screenshots/home.png)
+
+**Facilitator console** — a sample session ready to begin.
+
+![Facilitator console for an example company](docs/screenshots/facilitator.png)
+
+**Projector dashboard** — the shared view for participants.
+
+![Projector dashboard for an example session](docs/screenshots/projector.png)
+
 ## Requirements
 
 - Node.js 20.9 or later and npm
@@ -16,7 +32,7 @@ npx prisma db push
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The facilitator console is at `/facilitator` and the shared display is at `/projector`. Follow the interface to create a session and connect its projector view.
+Open [http://localhost:3000](http://localhost:3000), enter the company and scenario details, and create a session. The app opens the facilitator console with a session ID in the URL. Use **Proyectar Tablero** to open the projector view for that same session; share that view on a second display. The facilitator starts and advances the simulation from the console. Both views require a session ID, so opening `/facilitator` or `/projector` directly without one will show an error.
 
 The Prisma schema uses `prisma/dev.db`. A database is included in the repository; `prisma db push` synchronizes its schema. To populate benchmark data, run `node prisma/seed.js`. **The seed deletes existing benchmark records** before inserting its sample data.
 
