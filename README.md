@@ -1,10 +1,48 @@
 # CYBERTOPS
 
-This repository is a placeholder for CYBERTOPS. The previous `cybertop-premium` application and its accompanying resources have been removed from the current tree.
+CYBERTOP Premium is a cybersecurity crisis simulation for executive teams and boards. A facilitator runs a scenario while a separate projector dashboard displays the evolving crisis, decisions, and metrics. The interface and detailed simulation documentation are primarily in Spanish.
 
-## Repository contents
+## Requirements
 
-- `README.md` — this overview.
-- `.gitignore` — exclusions for Node.js dependencies, Next.js build output, logs, and local environment files.
+- Node.js 20.9 or later and npm
+- A writable local filesystem for the SQLite database
 
-There is currently no application, installation procedure, or runnable test suite in the current tree. Earlier versions remain available in the Git history.
+## Getting started
+
+```bash
+npm install
+npx prisma generate
+npx prisma db push
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000). The facilitator console is at `/facilitator` and the shared display is at `/projector`. Follow the interface to create a session and connect its projector view.
+
+The Prisma schema uses `prisma/dev.db`. A database is included in the repository; `prisma db push` synchronizes its schema. To populate benchmark data, run `node prisma/seed.js`. **The seed deletes existing benchmark records** before inserting its sample data.
+
+## Commands
+
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm run build` | Build for production |
+| `npm start` | Start the production server after building |
+| `npm run lint` | Run ESLint |
+| `node test_premium_engine.mjs` | Run the standalone simulation engine checks |
+
+## How it works
+
+The Next.js application exposes facilitator and projector views and API routes for sessions and votes. Prisma stores sessions, decisions, votes, red-team events, and benchmarks in SQLite. The simulation engine evaluates decisions across 12 risk dimensions and calculates crisis, readiness, and decision-speed metrics. The projector periodically polls the session API for updates.
+
+- `src/app/` — pages, styles, and session API routes.
+- `src/components/` — facilitator and projector interfaces.
+- `src/lib/` — simulation configuration, engine, benchmarks, and Prisma client.
+- `prisma/` — schema, SQLite database, and benchmark seed.
+- `public/` — static assets.
+- `Recursos/` — supporting documents and media; see its README.
+- `scratch/` and root `test_*.mjs` / `check_*.mjs` — standalone development and diagnostic scripts; some require a running server or database.
+- `HOW_IT_WORKS.md` — detailed Spanish documentation of the architecture, simulation, and metrics.
+
+## Technology
+
+Next.js App Router, React, Prisma and SQLite, Tailwind CSS, Recharts, and Lucide icons.

@@ -1,0 +1,73 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Session {
+  id                  String        @id @default(uuid())
+  companyName         String
+  industryKey         String
+  countries           String        // Comma-separated list of country codes, e.g., "US,EU"
+  currentStep         Int           @default(0)
+  gci                 Float         @default(0)
+  dvs                 Float         @default(100)
+  brs                 Float         @default(5.0)
+  stockPrice          Float         @default(100.0)
+  dimensionScoresJson String        @default("{}") // Stores the 12 dimensions as a JSON string
+  stockHistoryJson    String        @default("[]") // Stores the stock ticks history as a JSON string
+  isFinished          Boolean       @default(false)
+  showQuestion        Boolean       @default(false)
+  startedAt           DateTime      @default(now())
+  endedAt             DateTime?
+  decisionLogs        DecisionLog[]
+  redTeamLogs         RedTeamLog[]
+  votes               VoteLog[]
+}
+
+model DecisionLog {
+  id                  String   @id @default(uuid())
+  sessionId           String
+  session             Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  step                Int
+  decisionId          Int
+  title               String
+  optionChosen        String
+  optionText          String
+  responseTimeSeconds Int
+  sla                 Int
+  dvs                 Float
+  loggedAt            DateTime @default(now())
+}
+
+model RedTeamLog {
+  id        String   @id @default(uuid())
+  sessionId String
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  step      Int
+  injectKey String
+  name      String
+  appliedAt DateTime @default(now())
+}
+
+model VoteLog {
+  id        String   @id @default(uuid())
+  sessionId String
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  step      Int
+  option    String   // 'A', 'B', 'C'
+  votedAt   DateTime @default(now())
+}
+
+model Benchmark {
+  id          String   @id @default(uuid())
+  companyName String
+  industryKey String
+  finalGci    Float
+  finalBrs    Float
+  finalDvs    Float
+  completedAt DateTime @default(now())
+}
